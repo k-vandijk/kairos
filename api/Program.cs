@@ -1,3 +1,4 @@
+using API.Services.GeolocationService;
 using API.Services.HashingService;
 using API.Services.JwtTokenService;
 using Data;
@@ -6,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +19,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Register your custom JWT token service
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IHashingService, HashingService>();
+builder.Services.AddScoped<IGeolocationService, GeolocationService>();
 
 // Configure JWT authentication
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
