@@ -8,4 +8,6 @@ public class ApplicationUser : BaseModel
 
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
+
+    public virtual List<Timecapsule> Timecapsules { get; set; }
 }

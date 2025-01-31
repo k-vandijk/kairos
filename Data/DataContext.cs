@@ -10,4 +10,5 @@ public class DataContext : DbContext
     }
 
     public DbSet<ApplicationUser> Users { get; set; }
+    public DbSet<Timecapsule> Timecapsules { get; set; }
 }

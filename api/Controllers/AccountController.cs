@@ -42,6 +42,7 @@ public class AccountController : BaseController
 
         currentUser.FirstName = dto.FirstName;
         currentUser.LastName = dto.LastName;
+        currentUser.UpdatedAt = DateTime.UtcNow;
 
         _context.Users.Update(currentUser);
         await _context.SaveChangesAsync();
