@@ -1,4 +1,4 @@
-﻿namespace Data.DTOs.AccountDTOs
+﻿namespace Data.DTOs.AuthDTOs
 {
     public class RegisterDTO
     {

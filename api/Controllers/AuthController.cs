@@ -1,7 +1,7 @@
 ﻿using API.Services.HashingService;
 using API.Services.JwtTokenService;
 using Data;
-using Data.DTOs.AccountDTOs;
+using Data.DTOs.AuthDTOs;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,13 +10,13 @@ namespace API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AuthController : Controller
+public class AuthController : BaseController
 {
     private readonly DataContext _context;
     private readonly IJwtTokenService _tokenService;
     private readonly IHashingService _hashingService;
 
-    public AuthController(DataContext context, IJwtTokenService tokenService, IHashingService hashingService)
+    public AuthController(DataContext context, IJwtTokenService tokenService, IHashingService hashingService) : base(context)
     {
         _context = context;
         _tokenService = tokenService;
