@@ -3,14 +3,9 @@
 public class HashingService : IHashingService
 {
     private readonly string _pepper;
-
-    public HashingService(IConfiguration configuration)
+    public HashingService()
     {
-        _pepper = configuration["Pepper"];
-        if (string.IsNullOrEmpty(_pepper))
-        {
-            throw new Exception("Server configuration error: Pepper is not set.");
-        }
+        _pepper = Environment.GetEnvironmentVariable("PEPPER")!;
     }
 
     public string HashPassword(string password, string salt)

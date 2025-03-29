@@ -1,6 +1,7 @@
 using API.Services.GeolocationService;
 using API.Services.HashingService;
 using API.Services.JwtTokenService;
+using API.Utils;
 using Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -8,13 +9,18 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
+
+// Load environment variables from .env file
+DotenvLoader.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-// Configure EF Core (update your connection string as needed)
+// Configure EF Core
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
 // Register your custom JWT token service
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
@@ -38,16 +44,11 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")!))
     };
 });
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    //options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    //// Optionally enable indented formatting:
-    //options.JsonSerializerOptions.WriteIndented = true;
-});
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
