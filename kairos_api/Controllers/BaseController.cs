@@ -1,7 +1,6 @@
 ﻿using kairos_api.Entities;
 using kairos_api.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace kairos_api.Controllers;
 

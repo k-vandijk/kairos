@@ -1,10 +1,8 @@
-﻿using kairos_api.Services.GeolocationService;
-using kairos_api.DTOs.TimecapsuleDTOs;
+﻿using kairos_api.DTOs.TimecapsuleDTOs;
+using kairos_api.Repositories;
+using kairos_api.Services.CapsuleService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using kairos_api.Repositories;
-using kairos_api.Entities;
 
 namespace kairos_api.Controllers;
 
@@ -13,15 +11,13 @@ namespace kairos_api.Controllers;
 [Authorize]
 public class CapsuleController : BaseController
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IGeolocationService _geolocationService;
-    public CapsuleController(IUnitOfWork unitOfWork, IGeolocationService geolocationService) : base(unitOfWork)
+    private readonly ICapsuleService _timecapsuleService;
+
+    public CapsuleController(IUnitOfWork unitOfWork, ICapsuleService timecapsuleService) : base(unitOfWork)
     {
-        _unitOfWork = unitOfWork;
-        _geolocationService = geolocationService;
+        _timecapsuleService = timecapsuleService;
     }
 
-    // This method returns all timecapsules created by the current user, but doesn't show the content of the timecapsules.
     [HttpGet("getall")]
     public async Task<IActionResult> GetTimecapsules()
     {
@@ -31,23 +27,10 @@ public class CapsuleController : BaseController
             return Unauthorized();
         }
 
-        var timecapsules = await _unitOfWork.Timecapsules.GetQueryable()
-            .Where(tc => tc.UserId == currentUser.Id)
-            .Select(tc => new TimecapsuleDTO
-            {
-                Id = tc.Id,
-                UserId = tc.UserId,
-                DateToOpen = tc.DateToOpen,
-                Latitude = tc.Latitude ?? 0,
-                Longitude = tc.Longitude ?? 0,
-                CreatedAt = tc.CreatedAt,
-            })
-            .ToListAsync();
-
+        var timecapsules = await _timecapsuleService.GetTimecapsulesForUserAsync(currentUser);
         return Ok(timecapsules);
     }
 
-    // This method shows the content of a specific timecapsule, but only if it is in range, and the date to open has passed.
     [HttpGet("get/{timecapsuleId}")]
     public async Task<IActionResult> GetTimecapsule([FromBody] GetTimecapsuleDTO dto, [FromRoute] Guid timecapsuleId)
     {
@@ -57,39 +40,19 @@ public class CapsuleController : BaseController
             return Unauthorized();
         }
 
-        var timecapsule = await _unitOfWork.Timecapsules.GetQueryable()
-            .FirstOrDefaultAsync(tc => tc.Id == timecapsuleId && tc.UserId == currentUser.Id);
-        if (timecapsule == null)
+        try
+        {
+            var capsule = await _timecapsuleService.GetTimecapsuleForUserAsync(currentUser, timecapsuleId, dto);
+            return Ok(capsule);
+        }
+        catch (KeyNotFoundException)
         {
             return NotFound();
         }
-
-        // if the date to open is in the future, return bad request.
-        if (timecapsule.DateToOpen > DateTime.Now)
+        catch (InvalidOperationException ex)
         {
-            return BadRequest("Timecapsule is not yet open.");
+            return BadRequest(ex.Message);
         }
-
-        // if timecapsule contains lat and lon values, check if it is in range.
-        if (timecapsule.Latitude != null && timecapsule.Longitude != null)
-        {
-            var distance = _geolocationService.CalculateDistance((double)timecapsule.Latitude, (double)timecapsule.Longitude, (double)dto.Latitude, (double)dto.Longitude);
-            if (distance > 1000)
-            {
-                return BadRequest("Timecapsule is out of range.");
-            }
-        }
-
-        return Ok(new TimecapsuleDTO()
-        {
-            Id = timecapsule.Id,
-            UserId = timecapsule.UserId,
-            Content = timecapsule.Content,
-            DateToOpen = timecapsule.DateToOpen,
-            Latitude = timecapsule.Latitude ?? 0,
-            Longitude = timecapsule.Longitude ?? 0,
-            CreatedAt = timecapsule.CreatedAt
-        });
     }
 
     [HttpPost("create")]
@@ -101,19 +64,7 @@ public class CapsuleController : BaseController
             return Unauthorized();
         }
 
-        var timecapsule = new Timecapsule
-        {
-            UserId = currentUser.Id,
-
-            Content = dto.Content,
-            DateToOpen = dto.DateToOpen,
-            Latitude = dto.Latitude,
-            Longitude = dto.Longitude
-        };
-
-        await _unitOfWork.Timecapsules.AddAsync(timecapsule);
-        await _unitOfWork.CompleteAsync();
-
-        return Ok("Timecapsule created successfully.");
+        var result = await _timecapsuleService.CreateTimecapsuleForUserAsync(currentUser, dto);
+        return Ok(result);
     }
 }
