@@ -1,0 +1,18 @@
+name: Gitleaks Scan
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Gitleaks scan on entire repository
+        uses: zricethezav/gitleaks-action@v2.0.0
+        with:
+          args: --report-format=json --report-path=./gitleaks-report.json

@@ -1,4 +1,4 @@
-name: .NET CI
+name: .NET CI - Tests
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup .NET
@@ -23,7 +23,7 @@ jobs:
         working-directory: kairos_api
         run: dotnet restore kairos.sln
 
-      - name: Build
+      - name: Build solution
         working-directory: kairos_api
         run: dotnet build kairos.sln --configuration Release --no-restore
 
