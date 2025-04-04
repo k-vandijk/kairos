@@ -1,22 +1,23 @@
 ﻿using kairos_api.Services.GeolocationService;
 using kairos_api.DTOs.TimecapsuleDTOs;
-using kairos_api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using kairos_api.Repositories;
+using kairos_api.Entities;
 
 namespace kairos_api.Controllers;
 
-[Route("kairos_api/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class TimecapsuleController : BaseController
+public class CapsuleController : BaseController
 {
-    private readonly DataContext _context;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IGeolocationService _geolocationService;
-    public TimecapsuleController(DataContext context, IGeolocationService geolocationService) : base(context)
+    public CapsuleController(IUnitOfWork unitOfWork, IGeolocationService geolocationService) : base(unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
         _geolocationService = geolocationService;
     }
 
@@ -30,13 +31,12 @@ public class TimecapsuleController : BaseController
             return Unauthorized();
         }
 
-        var timecapsules = await _context.Timecapsules
+        var timecapsules = await _unitOfWork.Timecapsules.GetQueryable()
             .Where(tc => tc.UserId == currentUser.Id)
             .Select(tc => new TimecapsuleDTO
             {
                 Id = tc.Id,
                 UserId = tc.UserId,
-                // Don't display content.
                 DateToOpen = tc.DateToOpen,
                 Latitude = tc.Latitude ?? 0,
                 Longitude = tc.Longitude ?? 0,
@@ -57,7 +57,8 @@ public class TimecapsuleController : BaseController
             return Unauthorized();
         }
 
-        var timecapsule = await _context.Timecapsules.FirstOrDefaultAsync(tc => tc.Id == timecapsuleId && tc.UserId == currentUser.Id);
+        var timecapsule = await _unitOfWork.Timecapsules.GetQueryable()
+            .FirstOrDefaultAsync(tc => tc.Id == timecapsuleId && tc.UserId == currentUser.Id);
         if (timecapsule == null)
         {
             return NotFound();
@@ -110,8 +111,9 @@ public class TimecapsuleController : BaseController
             Longitude = dto.Longitude
         };
 
-        _context.Timecapsules.Add(timecapsule);
-        await _context.SaveChangesAsync();
+        await _unitOfWork.Timecapsules.AddAsync(timecapsule);
+        await _unitOfWork.CompleteAsync();
+
         return Ok("Timecapsule created successfully.");
     }
 }

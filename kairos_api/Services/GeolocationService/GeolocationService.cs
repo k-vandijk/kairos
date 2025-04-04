@@ -2,7 +2,7 @@
 
 public class GeolocationService : IGeolocationService
 {
-    private const double EarthRadius = 6371000;
+    private const double EARTH_RADIUS = 6371000;
 
     public double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
@@ -21,7 +21,7 @@ public class GeolocationService : IGeolocationService
                    Math.Cos(lat1Rad) * Math.Cos(lat2Rad) *
                    Math.Sin(deltaLon / 2) * Math.Sin(deltaLon / 2);
         double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-        double distance = EarthRadius * c;
+        double distance = EARTH_RADIUS * c;
 
         return distance;
     }

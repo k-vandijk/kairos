@@ -1,8 +1,8 @@
-﻿using kairos_api.Models;
+﻿using kairos_api.Entities;
 
 namespace kairos_api.Services.JwtTokenService;
 
 public interface IJwtTokenService
 {
-    string GenerateToken(ApplicationUser user);
+    string GenerateToken(User user);
 }

@@ -1,4 +1,4 @@
-﻿using kairos_api.Models;
+﻿using kairos_api.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,7 +15,7 @@ public class JwtTokenService : IJwtTokenService
         _configuration = configuration;
     }
 
-    public string GenerateToken(ApplicationUser user)
+    public string GenerateToken(User user)
     {
         var claims = new List<Claim>
             {

@@ -1,6 +1,6 @@
-﻿namespace kairos_api.Models;
+﻿namespace kairos_api.Entities;
 
-public class BaseModel
+public class BaseEntity
 {
     public Guid Id { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

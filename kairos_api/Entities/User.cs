@@ -1,6 +1,6 @@
-﻿namespace kairos_api.Models;
+﻿namespace kairos_api.Entities;
 
-public class ApplicationUser : BaseModel
+public class User : BaseEntity
 {
     public string Email { get; set; }
     public string PasswordHash { get; set; }

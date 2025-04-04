@@ -1,4 +1,5 @@
 ﻿using kairos_api.DTOs.AccountDTOs;
+using kairos_api.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,11 @@ namespace kairos_api.Controllers;
 [Authorize]
 public class AccountController : BaseController
 {
-    private readonly DataContext _context;
-    public AccountController(DataContext context) : base(context)
+    private readonly IUnitOfWork _unitOfWork;
+
+    public AccountController(IUnitOfWork unitOfWork) : base(unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpGet("get")]
@@ -40,8 +42,8 @@ public class AccountController : BaseController
         currentUser.LastName = dto.LastName;
         currentUser.UpdatedAt = DateTime.UtcNow;
 
-        _context.Users.Update(currentUser);
-        await _context.SaveChangesAsync();
+        _unitOfWork.Users.Update(currentUser);
+        await _unitOfWork.CompleteAsync();
 
         return Ok("User updated successfully.");
     }

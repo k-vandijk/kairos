@@ -1,4 +1,4 @@
-﻿using kairos_api.Models;
+﻿using kairos_api.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace kairos_api;
@@ -9,6 +9,6 @@ public class DataContext : DbContext
     {
     }
 
-    public DbSet<ApplicationUser> Users { get; set; }
+    public DbSet<User> Users { get; set; }
     public DbSet<Timecapsule> Timecapsules { get; set; }
 }

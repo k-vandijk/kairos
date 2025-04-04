@@ -1,4 +1,5 @@
-﻿using kairos_api.Models;
+﻿using kairos_api.Entities;
+using kairos_api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,13 +7,13 @@ namespace kairos_api.Controllers;
 
 public class BaseController : Controller
 {
-    private readonly DataContext _context;
-    public BaseController(DataContext context)
+    private readonly IUnitOfWork _unitOfWork;
+    public BaseController(IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task<ApplicationUser> GetCurrentUserAsync()
+    public async Task<User?> GetCurrentUserAsync()
     {
         string email = User.FindFirst("email")?.Value;
         if (email == null)
@@ -20,7 +21,7 @@ public class BaseController : Controller
             return null;
         }
 
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+        var user = await _unitOfWork.Users.GetUserByEmailAsync(email);
         if (user == null)
         {
             return null;
