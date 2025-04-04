@@ -5,6 +5,8 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kairos_api", "kairos_api.csproj", "{766C42B8-8558-497B-835D-5E3220777016}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kairos_api_tests", "..\kairos_api_tests\kairos_api_tests.csproj", "{DC194A61-2E71-4612-99C2-E5D6055CD18B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,8 +17,15 @@ Global
 		{766C42B8-8558-497B-835D-5E3220777016}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{766C42B8-8558-497B-835D-5E3220777016}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{766C42B8-8558-497B-835D-5E3220777016}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC194A61-2E71-4612-99C2-E5D6055CD18B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC194A61-2E71-4612-99C2-E5D6055CD18B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC194A61-2E71-4612-99C2-E5D6055CD18B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC194A61-2E71-4612-99C2-E5D6055CD18B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C501F419-566A-49AA-AB9A-14028E1C3DFE}
 	EndGlobalSection
 EndGlobal

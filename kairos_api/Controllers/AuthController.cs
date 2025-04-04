@@ -1,9 +1,6 @@
-﻿using kairos_api.Services.HashingService;
-using kairos_api.Services.JwtTokenService;
-using kairos_api.DTOs.AuthDTOs;
+﻿using kairos_api.DTOs.AuthDTOs;
+using kairos_api.Services.AuthService;
 using Microsoft.AspNetCore.Mvc;
-using kairos_api.Repositories;
-using kairos_api.Entities;
 
 namespace kairos_api.Controllers;
 
@@ -11,63 +8,38 @@ namespace kairos_api.Controllers;
 [ApiController]
 public class AuthController : BaseController
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IJwtTokenService _tokenService;
-    private readonly IHashingService _hashingService;
+    private readonly IAuthService _authService;
 
-    public AuthController(IUnitOfWork unitOfWork, IJwtTokenService tokenService, IHashingService hashingService) : base(unitOfWork)
+    public AuthController(IAuthService authService) : base(null)
     {
-        _unitOfWork = unitOfWork;
-        _tokenService = tokenService;
-        _hashingService = hashingService;
+        _authService = authService;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
     {
-        if (dto.Password != dto.ConfirmPassword)
+        try
         {
-            return BadRequest("Passwords do not match.");
+            var message = await _authService.RegisterAsync(dto);
+            return Ok(message);
         }
-
-        var existingUser = await _unitOfWork.Users.GetUserByEmailAsync(dto.Email.ToLower());
-        if (existingUser != null)
+        catch (ArgumentException ex)
         {
-            return BadRequest("User with this email already exists.");
+            return BadRequest(ex.Message);
         }
-
-        string salt = BCrypt.Net.BCrypt.GenerateSalt();
-        string passwordHash = _hashingService.HashPassword(dto.Password, salt);
-
-        var user = new User
-        {
-            Email = dto.Email.ToLower(),
-            PasswordHash = passwordHash,
-            PasswordSalt = salt
-        };
-
-        await _unitOfWork.Users.AddAsync(user);
-        await _unitOfWork.CompleteAsync();
-
-        return Ok("User registered successfully.");
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO dto)
     {
-        var user = await _unitOfWork.Users.GetUserByEmailAsync(dto.Email.ToLower());
-        if (user == null)
+        try
         {
-            return Unauthorized("Invalid email or password.");
+            var token = await _authService.LoginAsync(dto);
+            return Ok(new { Token = token });
         }
-
-        bool isPasswordValid = _hashingService.VerifyPassword(dto.Password, user.PasswordHash, user.PasswordSalt);
-        if (!isPasswordValid)
+        catch (ArgumentException ex)
         {
-            return Unauthorized("Invalid email or password.");
+            return Unauthorized(ex.Message);
         }
-
-        var token = _tokenService.GenerateToken(user);
-        return Ok(new { Token = token });
     }
 }
