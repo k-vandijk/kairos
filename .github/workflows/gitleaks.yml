@@ -12,7 +12,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install Gitleaks
+        run: |
+          curl -sSL https://github.com/zricethezav/gitleaks/releases/download/v8.17.0/gitleaks_8.17.0_linux_x64.tar.gz | tar -xz
+          sudo mv gitleaks /usr/local/bin/gitleaks
+
       - name: Run Gitleaks scan on entire repository
-        uses: zricethezav/gitleaks-action@v2.0.0
-        with:
-          args: --report-format=json --report-path=./gitleaks-report.json
+        run: gitleaks detect --source=. --report-format=json --report-path=./gitleaks-report.json
