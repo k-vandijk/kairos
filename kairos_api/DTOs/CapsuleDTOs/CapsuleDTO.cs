@@ -1,6 +1,6 @@
-﻿namespace kairos_api.DTOs.TimecapsuleDTOs;
+﻿namespace kairos_api.DTOs.CapsuleDTOs;
 
-public class TimecapsuleDTO
+public class CapsuleDTO
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }

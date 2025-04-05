@@ -19,18 +19,6 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      # - name: Restore dependencies
-      #   working-directory: kairos_api
-      #   run: dotnet restore kairos.sln
-
-      # - name: Build solution
-      #   working-directory: kairos_api
-      #   run: dotnet build kairos.sln --configuration Release --no-restore
-
-      # - name: Run tests
-      #   working-directory: kairos_api
-      #   run: dotnet test kairos.sln --configuration Release --no-build
-
       - name: Run tests
         working-directory: kairos_api
         run: dotnet test kairos.sln --configuration Release

@@ -1,4 +1,4 @@
-﻿using kairos_api.DTOs.TimecapsuleDTOs;
+﻿using kairos_api.DTOs.CapsuleDTOs;
 using kairos_api.Repositories;
 using kairos_api.Services.CapsuleService;
 using Microsoft.AspNetCore.Authorization;
@@ -11,15 +11,15 @@ namespace kairos_api.Controllers;
 [Authorize]
 public class CapsuleController : BaseController
 {
-    private readonly ICapsuleService _timecapsuleService;
+    private readonly ICapsuleService _capsuleService;
 
-    public CapsuleController(IUnitOfWork unitOfWork, ICapsuleService timecapsuleService) : base(unitOfWork)
+    public CapsuleController(IUnitOfWork unitOfWork, ICapsuleService capsuleService) : base(unitOfWork)
     {
-        _timecapsuleService = timecapsuleService;
+        _capsuleService = capsuleService;
     }
 
     [HttpGet("getall")]
-    public async Task<IActionResult> GetTimecapsules()
+    public async Task<IActionResult> GetCapsules()
     {
         var currentUser = await GetCurrentUserAsync();
         if (currentUser == null)
@@ -27,12 +27,12 @@ public class CapsuleController : BaseController
             return Unauthorized();
         }
 
-        var timecapsules = await _timecapsuleService.GetTimecapsulesForUserAsync(currentUser);
-        return Ok(timecapsules);
+        var capsules = await _capsuleService.GetCapsulesForUserAsync(currentUser);
+        return Ok(capsules);
     }
 
-    [HttpGet("get/{timecapsuleId}")]
-    public async Task<IActionResult> GetTimecapsule([FromBody] GetTimecapsuleDTO dto, [FromRoute] Guid timecapsuleId)
+    [HttpGet("get/{capsuleId}")]
+    public async Task<IActionResult> GetCapsule([FromBody] GetCapsuleDTO dto, [FromRoute] Guid capsuleId)
     {
         var currentUser = await GetCurrentUserAsync();
         if (currentUser == null)
@@ -42,7 +42,7 @@ public class CapsuleController : BaseController
 
         try
         {
-            var capsule = await _timecapsuleService.GetTimecapsuleForUserAsync(currentUser, timecapsuleId, dto);
+            var capsule = await _capsuleService.GetCapsuleForUserAsync(currentUser, capsuleId, dto);
             return Ok(capsule);
         }
         catch (KeyNotFoundException)
@@ -56,7 +56,7 @@ public class CapsuleController : BaseController
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> CreateTimecapsule([FromBody] CreateTimecapsuleDTO dto)
+    public async Task<IActionResult> CreateCapsule([FromBody] CreateCapsuleDTO dto)
     {
         var currentUser = await GetCurrentUserAsync();
         if (currentUser == null)
@@ -64,7 +64,7 @@ public class CapsuleController : BaseController
             return Unauthorized();
         }
 
-        var result = await _timecapsuleService.CreateTimecapsuleForUserAsync(currentUser, dto);
+        var result = await _capsuleService.CreateCapsuleForUserAsync(currentUser, dto);
         return Ok(result);
     }
 }

@@ -1,4 +1,4 @@
-﻿using kairos_api.Repositories.TimecapsuleRepository;
+﻿using kairos_api.Repositories.CapsuleRepository;
 using kairos_api.Repositories.UserRepository;
 
 namespace kairos_api.Repositories;
@@ -6,6 +6,6 @@ namespace kairos_api.Repositories;
 public interface IUnitOfWork : IDisposable
 {
     IUserRepository Users { get; }
-    ITimecapsuleRepository Timecapsules { get; }
+    ICapsuleRepository Capsules { get; }
     Task<int> CompleteAsync();
 }

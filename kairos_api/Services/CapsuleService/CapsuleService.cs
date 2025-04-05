@@ -1,4 +1,4 @@
-﻿using kairos_api.DTOs.TimecapsuleDTOs;
+﻿using kairos_api.DTOs.CapsuleDTOs;
 using kairos_api.Entities;
 using kairos_api.Repositories;
 using kairos_api.Services.GeolocationService;
@@ -17,11 +17,11 @@ public class CapsuleService : ICapsuleService
         _geolocationService = geolocationService;
     }
 
-    public async Task<IEnumerable<TimecapsuleDTO>> GetTimecapsulesForUserAsync(User user)
+    public async Task<IEnumerable<CapsuleDTO>> GetCapsulesForUserAsync(User user)
     {
-        return await _unitOfWork.Timecapsules.GetQueryable()
+        return await _unitOfWork.Capsules.GetQueryable()
             .Where(tc => tc.UserId == user.Id)
-            .Select(tc => new TimecapsuleDTO
+            .Select(tc => new CapsuleDTO
             {
                 Id = tc.Id,
                 UserId = tc.UserId,
@@ -33,52 +33,52 @@ public class CapsuleService : ICapsuleService
             .ToListAsync();
     }
 
-    public async Task<TimecapsuleDTO> GetTimecapsuleForUserAsync(User user, Guid timecapsuleId, GetTimecapsuleDTO dto)
+    public async Task<CapsuleDTO> GetCapsuleForUserAsync(User user, Guid capsuleId, GetCapsuleDTO dto)
     {
-        var timecapsule = await _unitOfWork.Timecapsules.GetQueryable()
-            .FirstOrDefaultAsync(tc => tc.Id == timecapsuleId && tc.UserId == user.Id);
+        var capsule = await _unitOfWork.Capsules.GetQueryable()
+            .FirstOrDefaultAsync(tc => tc.Id == capsuleId && tc.UserId == user.Id);
 
-        if (timecapsule == null)
+        if (capsule == null)
         {
-            throw new KeyNotFoundException("Timecapsule not found.");
+            throw new KeyNotFoundException("Capsule not found.");
         }
 
-        // If the timecapsule's open date is in the future, throw an exception.
-        if (timecapsule.DateToOpen > DateTime.Now)
+        // If the capsules open date is in the future, throw an exception.
+        if (capsule.DateToOpen > DateTime.Now)
         {
-            throw new InvalidOperationException("Timecapsule is not yet open.");
+            throw new InvalidOperationException("Capsule is not yet open.");
         }
 
         // Check geolocation if available.
-        if (timecapsule.Latitude != null && timecapsule.Longitude != null)
+        if (capsule.Latitude != null && capsule.Longitude != null)
         {
             var distance = _geolocationService.CalculateDistance(
-                (double)timecapsule.Latitude,
-                (double)timecapsule.Longitude,
+                (double)capsule.Latitude,
+                (double)capsule.Longitude,
                 (double)dto.Latitude,
                 (double)dto.Longitude);
 
             if (distance > 1000)
             {
-                throw new InvalidOperationException("Timecapsule is out of range.");
+                throw new InvalidOperationException("Capsule is out of range.");
             }
         }
 
-        return new TimecapsuleDTO
+        return new CapsuleDTO
         {
-            Id = timecapsule.Id,
-            UserId = timecapsule.UserId,
-            Content = timecapsule.Content,
-            DateToOpen = timecapsule.DateToOpen,
-            Latitude = timecapsule.Latitude ?? 0,
-            Longitude = timecapsule.Longitude ?? 0,
-            CreatedAt = timecapsule.CreatedAt
+            Id = capsule.Id,
+            UserId = capsule.UserId,
+            Content = capsule.Content,
+            DateToOpen = capsule.DateToOpen,
+            Latitude = capsule.Latitude ?? 0,
+            Longitude = capsule.Longitude ?? 0,
+            CreatedAt = capsule.CreatedAt
         };
     }
 
-    public async Task<string> CreateTimecapsuleForUserAsync(User user, CreateTimecapsuleDTO dto)
+    public async Task<string> CreateCapsuleForUserAsync(User user, CreateCapsuleDTO dto)
     {
-        var timecapsule = new Timecapsule
+        var capsule = new Capsule
         {
             UserId = user.Id,
             Content = dto.Content,
@@ -87,9 +87,9 @@ public class CapsuleService : ICapsuleService
             Longitude = dto.Longitude
         };
 
-        await _unitOfWork.Timecapsules.AddAsync(timecapsule);
+        await _unitOfWork.Capsules.AddAsync(capsule);
         await _unitOfWork.CompleteAsync();
 
-        return "Timecapsule created successfully.";
+        return "Capsule created successfully.";
     }
 }

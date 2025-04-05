@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace kairos_api.Entities;
 
-public class Timecapsule : BaseEntity
+public class Capsule : BaseEntity
 {
     [ForeignKey("UserId")]
     [ValidateNever]

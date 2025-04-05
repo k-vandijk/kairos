@@ -1,6 +1,6 @@
-﻿namespace kairos_api.DTOs.TimecapsuleDTOs;
+﻿namespace kairos_api.DTOs.CapsuleDTOs;
 
-public class CreateTimecapsuleDTO
+public class CreateCapsuleDTO
 {
     public string Content { get; set; }
     public DateTime DateToOpen { get; set; }

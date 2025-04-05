@@ -10,5 +10,5 @@ public class DataContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
-    public DbSet<Timecapsule> Timecapsules { get; set; }
+    public DbSet<Capsule> Capsules { get; set; }
 }

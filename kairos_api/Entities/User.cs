@@ -9,5 +9,5 @@ public class User : BaseEntity
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
 
-    public virtual List<Timecapsule> Timecapsules { get; set; }
+    public virtual List<Capsule> Capsules { get; set; }
 }

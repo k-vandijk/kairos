@@ -30,7 +30,7 @@ namespace kairos_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Timecapsules",
+                name: "Capsules",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -44,9 +44,9 @@ namespace kairos_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Timecapsules", x => x.Id);
+                    table.PrimaryKey("PK_Capsules", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Timecapsules_Users_UserId",
+                        name: "FK_Capsules_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -54,8 +54,8 @@ namespace kairos_api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Timecapsules_UserId",
-                table: "Timecapsules",
+                name: "IX_Capsules_UserId",
+                table: "Capsules",
                 column: "UserId");
         }
 
@@ -63,7 +63,7 @@ namespace kairos_api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Timecapsules");
+                name: "Capsules");
 
             migrationBuilder.DropTable(
                 name: "Users");

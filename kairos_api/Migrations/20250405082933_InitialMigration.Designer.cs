@@ -12,7 +12,7 @@ using kairos_api;
 namespace kairos_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250404191836_InitialMigration")]
+    [Migration("20250405082933_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -25,7 +25,42 @@ namespace kairos_api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("kairos_api.Models.ApplicationUser", b =>
+            modelBuilder.Entity("kairos_api.Entities.Capsule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DateToOpen")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Capsules");
+                });
+
+            modelBuilder.Entity("kairos_api.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,45 +95,10 @@ namespace kairos_api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("kairos_api.Models.Timecapsule", b =>
+            modelBuilder.Entity("kairos_api.Entities.Capsule", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DateToOpen")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<double?>("Latitude")
-                        .HasColumnType("double precision");
-
-                    b.Property<double?>("Longitude")
-                        .HasColumnType("double precision");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Timecapsules");
-                });
-
-            modelBuilder.Entity("kairos_api.Models.Timecapsule", b =>
-                {
-                    b.HasOne("kairos_api.Models.ApplicationUser", "User")
-                        .WithMany("Timecapsules")
+                    b.HasOne("kairos_api.Entities.User", "User")
+                        .WithMany("Capsules")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -106,9 +106,9 @@ namespace kairos_api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("kairos_api.Models.ApplicationUser", b =>
+            modelBuilder.Entity("kairos_api.Entities.User", b =>
                 {
-                    b.Navigation("Timecapsules");
+                    b.Navigation("Capsules");
                 });
 #pragma warning restore 612, 618
         }
