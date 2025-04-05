@@ -5,7 +5,7 @@ namespace kairos_api.Repositories.UserRepository;
 
 public class UserRepository : Repository<User>, IUserRepository
 {
-    public UserRepository(DataContext context) : base(context)
+    public UserRepository(DataContext context, IHttpContextAccessor httpContextAccessor) : base(context, httpContextAccessor)
     {
     }
 

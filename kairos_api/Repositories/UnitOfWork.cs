@@ -10,11 +10,11 @@ public class UnitOfWork : IUnitOfWork
     public ICapsuleRepository Capsules { get; }
     public IUserRepository Users { get; }
 
-    public UnitOfWork(DataContext context)
+    public UnitOfWork(DataContext context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
-        Capsules = new kairos_api.Repositories.CapsuleRepository.CapsuleRepository(context);
-        Users = new kairos_api.Repositories.UserRepository.UserRepository(context);
+        Capsules = new kairos_api.Repositories.CapsuleRepository.CapsuleRepository(context, httpContextAccessor);
+        Users = new kairos_api.Repositories.UserRepository.UserRepository(context, httpContextAccessor);
     }
 
     public async Task<int> CompleteAsync()

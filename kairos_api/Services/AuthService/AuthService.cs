@@ -55,7 +55,15 @@ public class AuthService : IAuthService
         if (!isPasswordValid)
             throw new ArgumentException("Invalid email or password.");
 
+        await UpdateLastLoginAsync(user);
         var token = _tokenService.GenerateToken(user);
         return token;
+    }
+
+    private async Task UpdateLastLoginAsync(User user)
+    {
+        user.LastLoginAt = DateTime.UtcNow;
+        _unitOfWork.Users.Update(user);
+        await _unitOfWork.CompleteAsync();
     }
 }

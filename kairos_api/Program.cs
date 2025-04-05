@@ -40,6 +40,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Add HttpContextAccessor
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();

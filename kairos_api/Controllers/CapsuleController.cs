@@ -30,8 +30,8 @@ public class CapsuleController : BaseController
         var capsules = await _capsuleService.GetCapsulesForUserAsync(currentUser);
         return Ok(capsules);
     }
-
-    [HttpGet("get/{capsuleId}")]
+     
+    [HttpGet("get/{capsuleId:guid}")]
     public async Task<IActionResult> GetCapsule([FromBody] GetCapsuleDTO dto, [FromRoute] Guid capsuleId)
     {
         var currentUser = await GetCurrentUserAsync();

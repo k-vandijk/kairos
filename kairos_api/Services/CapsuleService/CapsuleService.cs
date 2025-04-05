@@ -82,7 +82,7 @@ public class CapsuleService : ICapsuleService
         {
             UserId = user.Id,
             Content = dto.Content,
-            DateToOpen = dto.DateToOpen,
+            DateToOpen = dto.DateToOpen.ToUniversalTime(),
             Latitude = dto.Latitude,
             Longitude = dto.Longitude
         };
