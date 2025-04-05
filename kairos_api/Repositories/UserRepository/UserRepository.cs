@@ -9,8 +9,8 @@ public class UserRepository : Repository<User>, IUserRepository
     {
     }
 
-    public async Task<User> GetUserByEmailAsync(string email)
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        return await _context.Users.FirstOrDefaultAsync(u => u.IsActive && u.Email.ToLower() == email.ToLower());
     }
 }

@@ -41,7 +41,8 @@ public class AuthService : IAuthService
         await _unitOfWork.Users.AddAsync(user);
         await _unitOfWork.CompleteAsync();
 
-        return "User registered successfully.";
+        var token = _tokenService.GenerateToken(user);
+        return token;
     }
 
     public async Task<string> LoginAsync(LoginDTO dto)

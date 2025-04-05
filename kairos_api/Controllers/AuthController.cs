@@ -20,8 +20,8 @@ public class AuthController : BaseController
     {
         try
         {
-            var message = await _authService.RegisterAsync(dto);
-            return Ok(message);
+            var token = await _authService.RegisterAsync(dto);
+            return Ok(new { Token = token });
         }
         catch (ArgumentException ex)
         {

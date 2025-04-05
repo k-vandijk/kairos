@@ -4,5 +4,5 @@ namespace kairos_api.Repositories.UserRepository;
 
 public interface IUserRepository : IRepository<User>
 {
-    Task<User> GetUserByEmailAsync(string email);
+    Task<User?> GetUserByEmailAsync(string email);
 }

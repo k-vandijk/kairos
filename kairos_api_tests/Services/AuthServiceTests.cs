@@ -73,17 +73,18 @@ public class AuthServiceTests
             ConfirmPassword = "Test123!"
         };
 
-        // No existing user
         _unitOfWorkMock
             .Setup(u => u.Users.GetUserByEmailAsync(registerDto.Email.ToLower()))
             .ReturnsAsync((User)null);
 
-        // Simulate the hashing process
         _hashingServiceMock
             .Setup(h => h.HashPassword(registerDto.Password, It.IsAny<string>()))
             .Returns("hashedPassword");
 
-        // Setup the unit of work to simulate a successful save operation
+        _jwtTokenServiceMock
+            .Setup(t => t.GenerateToken(It.IsAny<User>()))
+            .Returns("generatedToken");
+
         _unitOfWorkMock
             .Setup(u => u.CompleteAsync())
             .ReturnsAsync(1);
@@ -92,7 +93,7 @@ public class AuthServiceTests
         var result = await _authService.RegisterAsync(registerDto);
 
         // Assert
-        Assert.Equal("User registered successfully.", result);
+        Assert.Equal("generatedToken", result);
     }
 
     [Fact]
