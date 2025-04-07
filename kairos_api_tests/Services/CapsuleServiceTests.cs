@@ -5,6 +5,7 @@ using kairos_api.Services.CapsuleService;
 using kairos_api.Services.GeolocationService;
 using Moq;
 using MockQueryable;
+using Xunit;
 
 namespace kairos_api_tests.Services;
 

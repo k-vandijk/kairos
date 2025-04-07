@@ -5,6 +5,7 @@ using kairos_api.Services.AuthService;
 using kairos_api.Services.HashingService;
 using kairos_api.Services.JwtTokenService;
 using Moq;
+using Xunit;
 
 namespace kairos_api_tests.Services;
 
