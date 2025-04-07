@@ -1,4 +1,5 @@
-﻿using kairos_api.Infrastructure;
+﻿using Carter;
+using kairos_api.Middleware;
 using kairos_api.Repositories;
 using kairos_api.Services.AuthService;
 using kairos_api.Services.CapsuleService;
@@ -25,6 +26,8 @@ public static class ServiceExtensions
         // Exception handling
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
+
+        services.AddCarter();
 
         return services;
     }

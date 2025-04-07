@@ -1,3 +1,4 @@
+using Carter;
 using kairos_api;
 using kairos_api.Extensions;
 using kairos_api.Utils;
@@ -60,6 +61,6 @@ var app = builder.Build();
 
 app.ConfigureMiddleware();
 
-app.MapControllers();
+app.MapCarter();
 
 app.Run();

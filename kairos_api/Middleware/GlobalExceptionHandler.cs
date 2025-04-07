@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace kairos_api.Infrastructure;
+namespace kairos_api.Middleware;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {
