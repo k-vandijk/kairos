@@ -1,4 +1,5 @@
-﻿using kairos_api.Repositories;
+﻿using kairos_api.Infrastructure;
+using kairos_api.Repositories;
 using kairos_api.Services.AuthService;
 using kairos_api.Services.CapsuleService;
 using kairos_api.Services.GeolocationService;
@@ -21,6 +22,9 @@ public static class ServiceExtensions
         // Add Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+        // Exception handling
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
 
         return services;
     }

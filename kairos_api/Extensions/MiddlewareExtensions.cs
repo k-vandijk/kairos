@@ -1,6 +1,4 @@
-﻿using kairos_api.Middleware;
-
-namespace kairos_api.Extensions;
+﻿namespace kairos_api.Extensions;
 
 public static class MiddlewareExtensions
 {
@@ -11,7 +9,7 @@ public static class MiddlewareExtensions
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
+        app.UseExceptionHandler();
 
         return app;
     }

@@ -4,6 +4,7 @@ using kairos_api.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -44,7 +45,14 @@ builder.Services.AddControllers();
 
 builder.Services.AddApplicationServices();
 
-
+builder.Host.UseSerilog((context, configuration) =>
+    configuration
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+                .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+);
 
 var app = builder.Build();
 

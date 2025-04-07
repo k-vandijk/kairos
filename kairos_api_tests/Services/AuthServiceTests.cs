@@ -55,7 +55,7 @@ public class AuthServiceTests
 
         // Setup the unit of work to return an existing user
         _unitOfWorkMock
-            .Setup(u => u.Users.GetUserByEmailAsync(registerDto.Email.ToLower()))
+            .Setup(u => u.Users.GetByEmailAsync(registerDto.Email.ToLower()))
             .ReturnsAsync(new User { Email = registerDto.Email.ToLower() });
 
         // Act & Assert
@@ -74,7 +74,7 @@ public class AuthServiceTests
         };
 
         _unitOfWorkMock
-            .Setup(u => u.Users.GetUserByEmailAsync(registerDto.Email.ToLower()))
+            .Setup(u => u.Users.GetByEmailAsync(registerDto.Email.ToLower()))
             .ReturnsAsync((User)null);
 
         _hashingServiceMock
@@ -107,7 +107,7 @@ public class AuthServiceTests
         };
 
         _unitOfWorkMock
-            .Setup(u => u.Users.GetUserByEmailAsync(loginDto.Email.ToLower()))
+            .Setup(u => u.Users.GetByEmailAsync(loginDto.Email.ToLower()))
             .ReturnsAsync((User)null);
 
         // Act & Assert
@@ -125,7 +125,7 @@ public class AuthServiceTests
         };
 
         _unitOfWorkMock
-            .Setup(u => u.Users.GetUserByEmailAsync(loginDto.Email.ToLower()))
+            .Setup(u => u.Users.GetByEmailAsync(loginDto.Email.ToLower()))
             .ReturnsAsync(new User
             {
                 Email = loginDto.Email.ToLower(),
@@ -148,7 +148,7 @@ public class AuthServiceTests
         };
 
         _unitOfWorkMock
-            .Setup(u => u.Users.GetUserByEmailAsync(loginDto.Email.ToLower()))
+            .Setup(u => u.Users.GetByEmailAsync(loginDto.Email.ToLower()))
             .ReturnsAsync(new User
             {
                 Email = loginDto.Email.ToLower(),
