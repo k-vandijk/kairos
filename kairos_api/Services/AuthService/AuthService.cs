@@ -24,7 +24,7 @@ public class AuthService : IAuthService
         if (dto.Password != dto.ConfirmPassword)
             throw new ArgumentException("Passwords do not match.");
 
-        var existingUser = await _unitOfWork.Users.GetUserByEmailAsync(dto.Email.ToLower());
+        var existingUser = await _unitOfWork.Users.GetByEmailAsync(dto.Email.ToLower());
         if (existingUser != null)
             throw new ArgumentException("User with this email already exists.");
 
@@ -41,13 +41,12 @@ public class AuthService : IAuthService
         await _unitOfWork.Users.AddAsync(user);
         await _unitOfWork.CompleteAsync();
 
-        var token = _tokenService.GenerateToken(user);
-        return token;
+        return _tokenService.GenerateToken(user);
     }
 
     public async Task<string> LoginAsync(LoginDTO dto)
     {
-        var user = await _unitOfWork.Users.GetUserByEmailAsync(dto.Email.ToLower());
+        var user = await _unitOfWork.Users.GetByEmailAsync(dto.Email.ToLower());
         if (user == null)
             throw new ArgumentException("Invalid email or password.");
 
@@ -56,8 +55,7 @@ public class AuthService : IAuthService
             throw new ArgumentException("Invalid email or password.");
 
         await UpdateLastLoginAsync(user);
-        var token = _tokenService.GenerateToken(user);
-        return token;
+        return _tokenService.GenerateToken(user);
     }
 
     private async Task UpdateLastLoginAsync(User user)

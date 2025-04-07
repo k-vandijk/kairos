@@ -16,9 +16,6 @@ var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(connectionString));
 
-// Add Services & Unit of Work
-builder.Services.AddApplicationServices();
-
 // Configure JWT authentication
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 builder.Services.AddAuthentication(options =>
@@ -45,10 +42,13 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers();
 
+builder.Services.AddApplicationServices();
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseHttpsRedirection();
 
 app.ConfigureMiddleware();
 
